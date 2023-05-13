@@ -39,5 +39,4 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         ex.getBindingResult().getAllErrors().forEach((error) -> errors.add(error.getDefaultMessage()));
         return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
     }
-    
 }
