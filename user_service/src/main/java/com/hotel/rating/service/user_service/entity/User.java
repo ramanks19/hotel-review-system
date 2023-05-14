@@ -1,6 +1,8 @@
 package com.hotel.rating.service.user_service.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
@@ -52,5 +55,8 @@ public class User {
     @NonNull
     @Column(name = "DATE_OF_BIRTH", nullable = false)
     private LocalDate birthDate;
+
+    @Transient
+    private List<Rating> ratings = new ArrayList<>();
 
 }
