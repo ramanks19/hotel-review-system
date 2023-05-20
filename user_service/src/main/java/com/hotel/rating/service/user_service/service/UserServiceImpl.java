@@ -16,6 +16,7 @@ import com.hotel.rating.service.user_service.entity.Hotel;
 import com.hotel.rating.service.user_service.entity.Rating;
 import com.hotel.rating.service.user_service.entity.User;
 import com.hotel.rating.service.user_service.exceptions.EntityNotFoundException;
+import com.hotel.rating.service.user_service.external.HotelClient;
 import com.hotel.rating.service.user_service.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private HotelClient hotelClient;
 
     @Override
     public User saveUser(User user) {
@@ -77,6 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 */
 
+/* Call Microservices using Rest Template
     @Override
     public User getUser(Long id) {
         Optional<User> user = userRepository.findById(id);
@@ -101,7 +106,7 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException(id, User.class);
         }
     }
-
+*/
 
 /*
     @Override
@@ -115,5 +120,26 @@ public class UserServiceImpl implements UserService {
         else throw new EntityNotFoundException(id, User.class);
     }
 */    
-    
+
+    @Override
+    public User getUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User retrievedUser = user.get();
+            //Call to Ratings Service
+            Rating[] userRatings = restTemplate.getForObject("http://RATING-SERVICE/ratings/users/" + id, Rating[].class);
+            List<Rating> ratings = Arrays.asList(userRatings);
+            
+            //Call to Hotel Service
+            List<Rating> ratingList = ratings.stream().map(rating -> {
+                Hotel hotel = hotelClient.getHotel(rating.getHotelId());
+                rating.setHotel(hotel);
+                return rating;
+            }).collect(Collectors.toList());
+            retrievedUser.setRatings(ratingList);
+            return retrievedUser;
+        } else {
+            throw new EntityNotFoundException(id, User.class);
+        }
+    }
 }
