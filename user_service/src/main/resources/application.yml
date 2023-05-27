@@ -59,3 +59,10 @@ resilience4j:
       ratingService:
         max-attempts: 3
         wait-duration: 5s
+
+  ratelimiter:
+    instances:
+      ratingLimiter:
+        limit-refresh-period: 4s
+        limit-for-period: 2
+        timeout-duration: 0s

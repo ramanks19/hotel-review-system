@@ -22,6 +22,7 @@ import com.hotel.rating.service.user_service.entity.User;
 import com.hotel.rating.service.user_service.service.UserService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 
 @RestController
@@ -46,8 +47,9 @@ public class UserController {
 
     int retryCount = 1;
     @GetMapping("/all")
-    @Retry(name = "ratingService", fallbackMethod = "ratingFallback")
-//    @CircuitBreaker(name = "ratingBreaker", fallbackMethod = "ratingFallback")
+//    @Retry(name = "ratingService", fallbackMethod = "ratingFallback")
+    @CircuitBreaker(name = "ratingBreaker", fallbackMethod = "ratingFallback")
+    @RateLimiter(name = "ratingLimiter", fallbackMethod = "ratingFallback")
     public ResponseEntity<List<User>> getAllUsers(){
         logger.info("Retry count: {}", retryCount);
         retryCount++;
