@@ -23,3 +23,9 @@ spring:
             - Path=/ratings/**
   config:
     import: "optional:configserver:http://localhost:8085"
+
+okta:
+  oauth2:
+    client-id: 0oa9qqe0txGB14nHv5d7
+    client-secret: FF8Rz9eiibgMsYjU95btedLiwI2_z29EQiGsAnnm
+    scopes: openid, profile, email, offline_access
