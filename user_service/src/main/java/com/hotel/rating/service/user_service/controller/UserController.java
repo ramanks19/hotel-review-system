@@ -49,7 +49,7 @@ public class UserController {
     @GetMapping("/all")
 //    @Retry(name = "ratingService", fallbackMethod = "ratingFallback")
     @CircuitBreaker(name = "ratingBreaker", fallbackMethod = "ratingFallback")
-    @RateLimiter(name = "ratingLimiter", fallbackMethod = "ratingFallback")
+//    @RateLimiter(name = "ratingLimiter", fallbackMethod = "ratingFallback")
     public ResponseEntity<List<User>> getAllUsers(){
         logger.info("Retry count: {}", retryCount);
         retryCount++;
